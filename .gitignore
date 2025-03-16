@@ -1,0 +1,15 @@
+
+# Project SSH keys
+./todos-infra/keys/
+
+# Terraform
+./todos-infra/.terraform/*
+./todos-inra/*.tfstate
+*.tfstate.backup
+*.tfplan
+./todos-infra/plan.json
+./todos-infra/plan.out
+./todos-infra/.terraform.lock.hcl
+
+
+./AnsibleRoles/secrets/

@@ -1,0 +1,35 @@
+---
+
+java_packages: "java-17-amazon-corretto.x86_64"
+
+
+jenkins_packages: "jenkins"
+
+# Jenkins settings
+jenkins_port: 8080
+jenkins_user: "Ahmed"
+jenkins_initial_password_file: "/var/lib/jenkins/secrets/initialAdminPassword"
+
+# Plugins to install
+jenkins_plugins:
+  - git
+  - pipeline
+  - github
+  - docker-plugin
+  - slack
+  - ssh-agent
+  - credentials-binding
+  - aws-credentials
+  - docker-workflow
+  - multibranch-scan-webhook-trigger
+  - multibranch-build-strategy-extension
+
+# Credentials (placeholders—secure these later!)
+github_credentials:
+  id: "github-creds"
+  username: ""
+  token: ""
+aws_ecr_credentials:
+  id: "aws-ecr-creds"
+  user: "AWS"
+  password: ""

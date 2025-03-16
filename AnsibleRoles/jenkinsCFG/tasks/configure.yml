@@ -1,0 +1,34 @@
+---
+- name: "Grab the Initial Password"
+  ansible.builtin.slurp:
+    src: "{{ jenkins_initial_password_file }}"
+  register: initial_password
+  become: yes
+
+- name: "Unlock Jenkins and Set Admin"
+  community.general.jenkins_script:
+    script: |
+      import jenkins.model.*
+      import hudson.security.*
+      def instance = Jenkins.getInstance()
+      def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+      hudsonRealm.createAccount('{{ jenkins_user }}', '{{ jenkins_admin_password }}')
+      instance.setSecurityRealm(hudsonRealm)
+      def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+      instance.setAuthorizationStrategy(strategy)
+      instance.save()
+    user: "admin"
+    password: "{{ initial_password.content | b64decode | trim }}"
+  become: yes
+
+- name: "Finish the Setup Wizard"
+  community.general.jenkins_script:
+    script: |
+      import static jenkins.model.Jenkins.instance as jenkins
+      import jenkins.install.InstallState
+      if (!jenkins.installState.isSetupComplete()) {
+        InstallState.INITIAL_SETUP_COMPLETED.initializeState()
+      }
+    user: "admin"
+    password: "{{ initial_password.content | b64decode | trim }}"
+  become: yes

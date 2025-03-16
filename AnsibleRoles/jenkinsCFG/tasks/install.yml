@@ -1,0 +1,45 @@
+---
+- name: "Set Up the Jenkins Repository"
+  ansible.builtin.template:
+    src: jenkins.repo.j2
+    dest: /etc/yum.repos.d/jenkins.repo
+    mode: '0644'
+  become: yes
+
+- name: "Add the Jenkins GPG Key"
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+  become: yes
+
+- name: Update yum Cache
+  ansible.builtin.yum:
+    update_cache: yes
+  become: yes
+  #when: ansible_os_family == 'RedHat'
+
+- name: "Install Java"
+  ansible.builtin.package:
+    name: "{{ java_packages }}"
+    state: present
+  become: yes
+
+- name: "Install Git"
+  ansible.builtin.yum:
+    name: "git"
+    state: present
+  become: yes
+
+- name: "Install Jenkins"
+  ansible.builtin.yum:
+    name: "{{ jenkins_packages }}"
+    state: present
+  become: yes
+
+- name: "Start Jenkins"
+  ansible.builtin.service:
+    name: jenkins
+    state: started
+    enabled: yes
+  become: yes
+  notify: Wait for Jenkins to Warm Up

@@ -1,0 +1,15 @@
+---
+# tasks file for pipeline_cfg
+
+- name: "Prepare the Jenkins Stage"
+  import_tasks: install.yml
+  tags: [jenkins, install]
+
+- name: "Tune Jenkins with Configuration"
+  import_tasks: configure.yml
+  tags: [jenkins, configure]
+
+- name: "Add Plugins and Credentials"
+  import_tasks: plugins.yml
+  tags: [jenkins, plugins]
+  when: jenkins_plugins is defined and jenkins_plugins | length > 0

@@ -1,0 +1,29 @@
+  backend "s3" {
+    bucket         = "your-terraform-state-bucket"
+    key            = "eks-cluster/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+   dynamodb_table = "terraform-lock"
+  }
+
+terraform graph | dot -Tpng > graph.png && open graph.png # create terraform graph
+------------------------------------------------
+
+## when creating sg use create_before_destroy = true meta argument to avoid down time of the resources attached to the sg
+------------------------------------------------
+
+## aws backup Module
+
+## to avoid using hardcoded account number you can use data source aws_caller_identity.current.account_id
+   or you can use resources arn of the resources you want to back up
+
+----------------------------------------------------------------
+## Ansible playbook 
+--------------------------------------
+
+# note: not every thing should be automated, some things should be done manually like creating credentials even if its encrypted
+# so that we can have a better control over the security of the system, so we can have a better control over the security of the system
+# may be in future we can automate this process as well but for now we will keep it manual
+# so we can have a better control over the security of the system
+
+#--------------------------------------

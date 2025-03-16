@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-frontend
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: "{{ .Values.frontend.image }}"
+        ports:
+        - containerPort: {{ .Values.frontend.port }}
+        env:
+        {{- toYaml .Values.frontend.env | nindent 12 }}
+        resources:
+          {{- toYaml .Values.frontend.resources | nindent 12 }}
+        # env:
+        # - name: REACT_APP_API_URL
+        #   value: "http://k8s-default-myreleas-0b6a38b715-0bd88cfa2066b5e3.elb.eu-central-1.amazonaws.com/api"
+        # resources:
+        #   requests:
+        #     memory: "64Mi"  # Request 64 MiB of memory
+        #     cpu: "100m"     # Request 100 milliCPU (0.1 CPU)
+        #   limits:
+        #     memory: "1Gi"   # Limit memory to 1 GiB
+        #     cpu: "1"        # Limit CPU usage to 1 core
+
+

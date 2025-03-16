@@ -1,0 +1,6 @@
+---
+# # Production tweaks
+# jenkins_port: 443  # Secure port for HTTPS
+# java_packages: "java-17-openjdk"  # Upgrade to Java 17
+
+

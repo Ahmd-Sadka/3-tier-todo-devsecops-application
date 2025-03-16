@@ -1,0 +1,15 @@
+---
+# handlers file for pipeline_cfg
+
+- name: Wait for Jenkins to Warm Up
+  ansible.builtin.wait_for:
+    port: "{{ jenkins_port }}"
+    delay: 10
+    timeout: 60
+  become: yes
+
+- name: Restart Jenkins
+  ansible.builtin.service:
+    name: jenkins
+    state: restarted
+  become: yes

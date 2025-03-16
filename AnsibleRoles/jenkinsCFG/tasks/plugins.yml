@@ -1,0 +1,59 @@
+---
+- name: "Install Plugins"
+  community.general.jenkins_plugin:
+    name: "{{ item }}"
+    state: latest
+    url_username: "{{ jenkins_user }}"
+    url_password: "{{ jenkins_admin_password }}"
+  loop: "{{ jenkins_plugins }}"
+  become: yes
+  notify: Restart Jenkins
+
+- name: "Get Jenkins Crumb"
+  shell: |
+    CRUMB=$(curl -k 'http://{{ jenkins_user }}:{{ jenkins_admin_password }}@127.0.0.1:{{ jenkins_port }}/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)' -c cookies.txt)
+    echo $CRUMB
+  register: crumb_output
+  ignore_errors: yes
+
+- name: "Generate a New API Token"
+  shell: |
+    TOKEN=$(curl -k 'http://{{ jenkins_user }}:{{ jenkins_admin_password }}@127.0.0.1:{{ jenkins_port }}/user/{{ jenkins_user }}/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken' \
+    --data 'newTokenName=orchestration-token' \
+    -b cookies.txt \
+    -H "$(echo {{ crumb_output.stdout }})")
+    echo $TOKEN
+  register: api_token_output
+  ignore_errors: yes
+
+- name: "Extract Token Value"
+  set_fact:
+    api_token_value: "{{ (api_token_output.stdout | from_json).data.tokenValue }}"
+
+# - name: "Set Up GitHub Credentials"
+#   ansible.builtin.uri:
+#     url: "http://{{ jenkins_user }}:{{ jenkins_admin_password }}@127.0.0.1:{{ jenkins_port }}/credentials/store/system/domain/_/createCredentials"
+#     method: POST
+#     body: "{{ {
+#       '': '0',
+#       'credentials': {
+#         'scope': 'GLOBAL',
+#         'id': github_credentials.id,
+#         'username': github_credentials.username,
+#         'password': github_credentials.token,
+#         'description': 'GitHub Credentials',
+#         '$class': 'com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl'
+#       }
+#     } | to_json }}"
+#     status_code: 200
+#   become: yes
+#   when: github_credentials.username != "" and github_credentials.token != ""
+
+#--------------------------------------
+
+# note: not every thing should be automated, some things should be done manually like creating credentials even if its encrypted
+# so that we can have a better control over the security of the system, so we can have a better control over the security of the system
+# may be in future we can automate this process as well but for now we will keep it manual
+# so we can have a better control over the security of the system
+
+#--------------------------------------
