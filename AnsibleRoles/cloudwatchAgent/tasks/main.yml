@@ -1,0 +1,40 @@
+- name: Update_cache
+  yum:
+      update_cache: yes
+- name: Install_CloudWatch_Agent
+  yum: 
+      name: "{{Package_name}}"
+      state: present
+
+- name: Creating Logs file
+  file:
+      path: /home/ec2-user/logs.txt
+      state: touch  # Creates the file if it doesn't exist
+      mode: '0666'  # Sets permissions (optional)
+
+- name: Copy Logs Config file
+  copy:
+      src: config.json
+      dest: /opt/aws/amazon-cloudwatch-agent/bin/config.json
+
+- name: Start CloudWatch Agent
+  command: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
+
+- name: Install cronie (cron package)
+  yum:
+     name: cronie
+     state: present
+- name: Start cron service
+  service:
+     name: crond
+     state: started
+- name: Enable cron service on boot
+  service:
+     name: crond
+     enabled: yes
+
+- name: Cron Job to write to the log file every 5 minutes
+  cron:
+      name: "Write The Hostname to the log file every 5 minutes"
+      minute: "*/5"
+      job: "echo \"Hello from ${HOSTNAME}\" >> /home/ec2-user/logs.txt"

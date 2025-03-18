@@ -3,10 +3,8 @@
 ./todos-infra/keys/
 
 # Terraform
-./todos-infra/.terraform/*
-./todos-inra/*.tfstate
-*.tfstate.backup
-*.tfplan
+./todos-infra/.terraform/
+./todos-inra/terraform.tfstate
 ./todos-infra/plan.json
 ./todos-infra/plan.out
 ./todos-infra/.terraform.lock.hcl

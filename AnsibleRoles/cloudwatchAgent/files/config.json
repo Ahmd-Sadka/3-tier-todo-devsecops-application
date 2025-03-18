@@ -1,0 +1,20 @@
+{
+	"agent": {
+		"run_as_user": "root"
+	},
+	"logs": {
+		"logs_collected": {
+			"files": {
+				"collect_list": [
+					{
+						"file_path": "/home/ec2-user/logs.txt",
+						"log_group_class": "STANDARD",
+						"log_group_name": "Project-logs",
+						"log_stream_name": "Project-logs-stream",
+						"retention_in_days": 7
+					}
+				]
+			}
+		}
+	}
+}
