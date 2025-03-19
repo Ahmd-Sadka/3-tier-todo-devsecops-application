@@ -17,3 +17,8 @@ output "eks_cluster_name" {
 output "node_group_ips" {
   value = data.aws_instances.workers_IP.public_ips
 }
+
+output "ebs_csi_driver_role_arn" {
+  value = aws_iam_role.ebs-csi-role.arn
+  
+}

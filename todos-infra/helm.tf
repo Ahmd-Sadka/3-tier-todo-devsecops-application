@@ -28,6 +28,10 @@ resource "helm_release" "ebs_csi_driver" {
     chart      = "../Charts/aws-ebs-csi-driver"
     namespace  = "kube-system"
     
+    set {
+        name  = "controller.serviceAccount.annotations.eks.amazonaws.com/role-arn"
+        value = "module.eksModule.ebs_csi_driver_role_arn"
+    }
 
 }
 
