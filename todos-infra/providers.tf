@@ -24,14 +24,14 @@ terraform {
 
 
 
-#   backend "s3" {
-#     bucket         = var.bucket_name
-#     key            = "global/terraform.tfstate"
-#     region         = "us-east-1"
-#     encrypt        = true
-#    #dynamodb_table = module.terraform_backend.dynamodb_table_name
-#   }
-# }
+  #    backend "s3" {
+  #      bucket         = "application-registry-b6f8"
+  #      key            = "global/terraform.tfstate"
+  #      region         = "us-east-1"
+  #  #   #encrypt        = true
+  #  #   #dynamodb_table = module.terraform_backend.dynamodb_table_name
+  #    }
+ 
 }
 
 provider "aws" {
@@ -44,22 +44,22 @@ provider "kubernetes" {
 
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"  # Specifies the API version for the exec plugin
-    command     = "aws"  # Specifies the command to execute for authentication 
-                         # This requires the awscli to be installed locally where Terraform is executed
-    args = ["eks", "get-token", "--cluster-name", module.eksModule.eks_cluster_name]
+    command     = "aws"  # Specifies the command to execute for authentication
+    # This requires the awscli to be installed locally where Terraform is executed
+    args = ["eks", "get-token", "--cluster-name", module.eksModule.eks_cluster_name]  # Specifies the arguments for the command
   }
 }
 
 provider "helm" {
   kubernetes {
-    host                   = module.eksModule.eks_cluster_endpoint  # Specifies the Kubernetes cluster endpoint
-    cluster_ca_certificate = base64decode(module.eksModule.eks_cluster_certificate_authority)  # Decodes and sets the cluster CA certificate
+    host                   = module.eksModule.eks_cluster_endpoint  # Specifies the Kubernetes cluster endpoint for Helm
+    cluster_ca_certificate = base64decode(module.eksModule.eks_cluster_certificate_authority)  # Decodes and sets the cluster CA certificate for Helm
 
     exec {
       api_version = "client.authentication.k8s.io/v1beta1"  # Specifies the API version for the exec plugin
-      command     = "aws"  # Specifies the command to execute for authentication 
-                           # This requires the awscli to be installed locally where Terraform is executed
-      args = ["eks", "get-token", "--cluster-name", module.eksModule.eks_cluster_name]
+      command     = "aws"  # Specifies the command to execute for authentication
+      # This requires the awscli to be installed locally where Terraform is executed
+      args = ["eks", "get-token", "--cluster-name", module.eksModule.eks_cluster_name]  # Specifies the arguments for the command
     }
   }
 }

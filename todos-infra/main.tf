@@ -34,15 +34,14 @@ module "backupModule" {
   
 }
 
-resource "random_id" "suffix" {
-  byte_length = 4
-  
+resource random_id "bucket_suffix" {
+  byte_length = 2
 }
 
 module "s3Module" {
   source = "./modules/s3Module"
 
-  bucket_name        = "todos-elb-logs-${random_id.suffix.hex}"
+  bucket_name        = "application-registry-${random_id.bucket_suffix.hex}"
   enable_elb_logging = true
   force_destroy      = true
   tags = {

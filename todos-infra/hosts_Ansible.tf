@@ -11,11 +11,11 @@ resource "null_resource" "generate_inventory" {
 
   provisioner "local-exec" {
     command = <<EOT
-echo "[Jenkins_EC2]" > ../Ansible/my_inventory.ini
-echo "${module.pipelineModule.Jenkins_public_ip}" >> ../Ansible_plays/pipeline_cfg/my_inventory.ini
-echo "" >> ../Ansible/my_inventory.ini
-echo "[Worker_Nodes_EC2]" >> ../Ansible/my_inventory.ini
-${join("\n", [for ip in module.eksModule.node_group_ips : "echo '${ip}' >> ../Ansible_plays/pipeline_cfg/my_inventory.ini"])}
+echo "[Jenkins_EC2]" > ../AnsibleRoles/inventory
+echo "${module.pipelineModule.Jenkins_public_ip}" >> ../AnsibleRoles/inventory
+echo "" >> ../AnsibleRoles/inventory
+echo "[Worker_Nodes_EC2]" >> ../AnsibleRoles/inventory
+${join("\n", [for ip in module.eksModule.node_group_ips : "echo '${ip}' >> ../AnsibleRoles/inventory"])}
 EOT
   }
 }

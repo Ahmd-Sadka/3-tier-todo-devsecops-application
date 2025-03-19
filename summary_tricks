@@ -27,3 +27,24 @@ terraform graph | dot -Tpng > graph.png && open graph.png # create terraform gra
 # so we can have a better control over the security of the system
 
 #--------------------------------------
+
+##s3Module
+
+# appling s3 module at first using the following command
+terraform apply -target=module.s3
+then we can remove it from the state file using the following command
+terraform state rm module.s3
+to prevent any one using terraform destroy command from destroying the s3 module and deleting the remote state file
+
+or we can use 
+lifecycle { prevent_destroy = true }
+
+# then we can apply the rest of the resources using the following command
+terraform apply 
+--------------------------------------
+# helm releases
+## very important
+
+after creating eks and node groupwe should initialize again to make helm can interact with our cluster in order to perfoem helm commands to install the helm charts
+
+-----------------------------------

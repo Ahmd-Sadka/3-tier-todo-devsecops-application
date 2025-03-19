@@ -3,9 +3,9 @@ resource "aws_s3_bucket" "main" {
   force_destroy = var.force_destroy
   tags          = var.tags
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
 
 data "aws_caller_identity" "current" {}

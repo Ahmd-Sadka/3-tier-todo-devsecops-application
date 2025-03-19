@@ -1,0 +1,28 @@
+monitoringPasscode: "define_it"  # Passcode for monitoring access
+
+postgresql:
+  persistence:
+    storageClass: "gp2"  # Storage class for PostgreSQL persistence
+
+community:
+  enabled: true  # Enable community features
+  
+ingress:
+  enabled: true  # Enable ingress
+  # Used to create an Ingress record.
+  hosts:
+   - name: sonarqube.your-org.com  # Hostname for the ingress
+     pathType: Prefix  # Path type for the ingress
+
+  annotations:
+   alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'  # ALB listen ports configuration
+   alb.ingress.kubernetes.io/scheme: internet-facing  # Expose ALB to the public internet
+   # Redirect HTTP to HTTPS
+   alb.ingress.kubernetes.io/actions.redirect-to-https: >
+    {"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}  
+   alb.ingress.kubernetes.io/group.name: shared-group  # ALB group name
+  
+  ingressClassName: alb
+  
+service:
+  type: ClusterIP

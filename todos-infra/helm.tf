@@ -7,10 +7,19 @@ resource "helm_release" "elb_controller" {
 
     set {
         name  = "clusterName"
-        value = module.eksModule.eks_cluster_name
+        value = "zephyr-eks"
     }
 
-    depends_on = [module.eksModule]
+    set {
+        name  = "region"
+        value = "us-east-1"
+    }
+
+    set {
+        name  = "vpcId"
+        value = "module.vpcModule.vpc_id"
+    }
+
     
 }
 
@@ -19,8 +28,6 @@ resource "helm_release" "ebs_csi_driver" {
     chart      = "../Charts/aws-ebs-csi-driver"
     namespace  = "kube-system"
     
-
-    depends_on = [ module.eksModule ]
 
 }
 
@@ -31,5 +38,5 @@ resource "helm_release" "sonarqube" {
     create_namespace = true
 
     values = [ file("../Charts/sonarqube/myValues.yml") ]
-    depends_on = [ module.eksModule, helm_release.elb_controller, helm_release.ebs_csi_driver ]
+    depends_on = [ helm_release.elb_controller, helm_release.ebs_csi_driver ]
 }
