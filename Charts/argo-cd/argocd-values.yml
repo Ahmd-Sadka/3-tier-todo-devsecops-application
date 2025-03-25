@@ -1,0 +1,22 @@
+server:
+  extraArgs:
+    - --rootpath=/argocd  # Sets ArgoCD to serve under /argocd
+    - --basehref=/argocd  # Sets the base URL to /argocd
+    - --insecure          # Disables HTTP-to-HTTPS redirect, allowing HTTP
+  ingress:
+    enabled: true
+    ingressClassName: alb  # Specifies the ALB Ingress controller
+    annotations:
+      alb.ingress.kubernetes.io/group.name: shared-group  # Groups with other Ingresses, adjust as needed
+      alb.ingress.kubernetes.io/healthcheck-path: /argocd/healthz  # Health check path
+      alb.ingress.kubernetes.io/healthcheck-protocol: HTTP         # Ensures HTTP is used
+    paths:
+      - path: /argocd
+        pathType: Prefix  # Routes /argocd/* to ArgoCD service
+    backend:
+      service:
+        name: argocd-server
+        port:
+          number: 80  # Targets HTTP port of the ArgoCD service
+  service:
+    type: NodePort  # Default service type

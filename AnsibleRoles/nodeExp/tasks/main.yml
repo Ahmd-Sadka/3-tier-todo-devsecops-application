@@ -8,7 +8,7 @@
   register: node_exporter_version_check
 
 - name: Configure latest version
-  include_tasks: config-version.yaml
+  include_tasks: detVersion.yml
   when: >
     node_exporter_version is match("latest")
     or node_exporter_version is not defined
@@ -43,7 +43,7 @@
 
 - name: Copy the node_exporter systemd unit file.
   template:
-    src: node_exporter.service.j2
+    src: nodeExporter_svc.j2
     dest: /etc/systemd/system/node_exporter.service
     mode: 0644
   register: node_exporter_service

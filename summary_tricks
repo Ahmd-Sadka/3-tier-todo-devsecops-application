@@ -1,3 +1,8 @@
+ # use the following command to update the kubeconfig
+aws eks update-kubeconfig --region us-east-1 --name zephyr-eks
+
+## to create a remote state file
+ --------------------------------------
   backend "s3" {
     bucket         = "your-terraform-state-bucket"
     key            = "eks-cluster/terraform.tfstate"
@@ -48,3 +53,32 @@ terraform apply
 after creating eks and node groupwe should initialize again to make helm can interact with our cluster in order to perfoem helm commands to install the helm charts
 
 -----------------------------------
+------------------
+
+eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=zephyr-eks --approve
+2025-03-20 09:24:12 [ℹ]  will create IAM Open ID Connect provider for cluster "zephyr-eks" in "us-east-1"
+2025-03-20 09:24:13 [✔]  created IAM Open ID Connect provider for cluster "zephyr-eks" in "us-east-1"
+
+ eksctl create iamserviceaccount \
+  --name ebs-csi-controller-sa \
+  --namespace kube-system \
+  --cluster zephyr-eks \
+  --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+  --approve \
+  --override-existing-serviceaccounts
+
+  ---------------------------------------
+
+  ## aws ebs csi driver
+  first we need to get the security certificate from eks-cluster oidc provider
+  
+  then  tells AWS, “Hey, here’s my EKS cluster’s OIDC endpoint. Trust it.” to allow k8s pods (aws-ebs-csi-driver-pods) to use aws permissions securely
+
+  resource "aws_iam_openid_connect_provider" "eks" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.eks.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.my_cluster.identity[0].oidc[0].issuer
+}
+
+afetr that we need to Create a Trust Policy for the EBS CSI Driver
+ writes a simple rule saying that only the Kubernetes service account named ebs-csi-controller-sa (in the kube-system namespace) can use a special AWS role.

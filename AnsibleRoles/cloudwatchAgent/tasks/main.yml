@@ -3,7 +3,7 @@
       update_cache: yes
 - name: Install_CloudWatch_Agent
   yum: 
-      name: "{{Package_name}}"
+      name: "amazon-cloudwatch-agent"
       state: present
 
 - name: Creating Logs file

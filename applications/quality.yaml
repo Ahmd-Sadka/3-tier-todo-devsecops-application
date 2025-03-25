@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: quality
+  namespace: argocd
+spec:
+  project: todo-app
+  source:
+    path: quality
+    repoURL: https://github.com/argoproj/argo-cd.git
+  destination:
+    namespace: quality
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: quality
+    repoURL: https://github.com/argoproj/argo-cd.git

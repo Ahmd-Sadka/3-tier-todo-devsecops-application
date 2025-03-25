@@ -1,0 +1,25 @@
+monitoringPasscode: "yourPasscode"  # Passcode for monitoring access
+
+postgresql:
+  persistence:
+    storageClass: "gp2"  # Storage class for PostgreSQL persistence
+
+community:
+  enabled: true  # Enable community features
+  
+ingress:
+  enabled: true  # Enable ingress
+  # Used to create an Ingress record.
+  hosts:
+     pathType: Prefix  # Path type for the ingress
+
+  annotations:
+   alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'  # ALB listen ports configuration
+   alb.ingress.kubernetes.io/scheme: internet-facing  # Expose ALB to the public internet
+  
+   alb.ingress.kubernetes.io/group.name: shared-group  # ALB group name
+  
+  ingressClassName: alb  # Ingress class name
+  
+service:
+  type: NodePort  # Service type node port because we are using ALB

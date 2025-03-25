@@ -13,13 +13,13 @@
       tags: [node_exporter, monitoring]
 
 - name: setup_jenkins_and_docker
-  hosts: jenkins
+  hosts: Jenkins_EC2
   gather_facts: no
   become: yes
   vars_files:
     - secrets/vault.yml
   roles:
-    - role: jetkinsCFG
+    - role: jenkinsCFG
       tags: [jenkins, install, configure, plugins]
 
     - role: docker
