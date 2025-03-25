@@ -24,13 +24,13 @@ terraform {
 
 
 
-  #    backend "s3" {
-  #      bucket         = "application-registry-b6f8"
-  #      key            = "global/terraform.tfstate"
-  #      region         = "us-east-1"
-  #  #   #encrypt        = true
-  #  #   #dynamodb_table = module.terraform_backend.dynamodb_table_name
-  #    }
+    #   backend "s3" {
+    #     bucket         = "application-registry-bea9"
+    #     key            = "global/terraform.tfstate"
+    #     region         = "us-east-1"
+    # #   #encrypt        = true
+    # #   #dynamodb_table = module.terraform_backend.dynamodb_table_name
+    #   }
  
 }
 

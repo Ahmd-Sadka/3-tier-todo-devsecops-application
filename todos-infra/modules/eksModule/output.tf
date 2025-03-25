@@ -18,7 +18,11 @@ output "node_group_ips" {
   value = data.aws_instances.workers_IP.public_ips
 }
 
-output "ebs_csi_driver_role_arn" {
-  value = aws_iam_role.ebs-csi-role.arn
-  
+output "ebs_csi_role_arn" {
+  value = aws_iam_role.ebs_csi.arn
+  # The ARN of the IAM role for the EBS CSI driver. 
+}
+
+output "aws_load_balancer_controller_role_arn" {
+  value = aws_iam_role.aws_load_balancer_controller.arn
 }

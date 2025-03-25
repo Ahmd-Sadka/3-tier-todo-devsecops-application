@@ -33,6 +33,7 @@ resource "aws_iam_role_policy_attachment" "EC2ContainerRegistryReadOnly" {
   
 }
 
+
 resource "aws_iam_role" "eks_node_role" {
     name = "eks_node_role"
     
@@ -82,7 +83,7 @@ resource "aws_iam_role_policy_attachment" "AmazonEBSCSI" {
 resource "aws_iam_policy" "awsloadbalancercontroller" {
   name        = "awsloadbalancercontroller"
   description = "AWS Load Balancer Controller Policy"
-  policy      = file("${path.module}/elbControllerPolicy.json")
+  policy      = file("${path.module}/AWSLoadBalancerController.json")
   
 }
 
@@ -92,25 +93,3 @@ resource "aws_iam_role_policy_attachment" "awsloadbalancercontroller" {
   
 }
 
-resource "aws_iam_role" "ebs-csi-role" {
-  name = "ebs-csi-role"
-  
-  assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "ec2.amazonaws.com"
-        },
-        "Action": "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "aws-ebs-csi-driver" {
-  role       = aws_iam_role.ebs-csi-role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEBSCSIDriverPolicy"
-  
-}

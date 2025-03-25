@@ -29,6 +29,7 @@ resource "aws_subnet" "public" {
 
   tags = {
     Name = "${var.project_name}-public-${each.value}"
+    "kubernetes.io/role/elb" = "1"
   }
   
 }

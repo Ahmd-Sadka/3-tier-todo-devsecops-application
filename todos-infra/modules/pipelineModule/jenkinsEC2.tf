@@ -34,6 +34,7 @@ resource "aws_iam_role_policy_attachment" "jenkins_ec2_cloudwatch_logs" {
   role       = aws_iam_role.jenkins_ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
+
 resource "aws_iam_instance_profile" "jenkins_ec2_instance_profile" {
   name = "jenkins-ec2-instance-profile"
   role = aws_iam_role.jenkins_ec2_role.name

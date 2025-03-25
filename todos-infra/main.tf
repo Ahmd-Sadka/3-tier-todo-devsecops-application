@@ -6,11 +6,11 @@ module "vpcModule" {
 
 }
 
-module "ecrModule" {
-  source = "./modules/ecrModule"
-  frontendRepository_name = "frontend"
-  backendRepository_name = "backend"
-}
+# module "ecrModule" {
+#   source = "./modules/ecrModule"
+#   frontendRepository_name = "frontend"
+#   backendRepository_name = "backend"
+# }
 
 module "eksModule" {
   source = "./modules/eksModule"
@@ -24,28 +24,28 @@ module "pipelineModule" {
   source = "./modules/pipelineModule"
   public_key_path = var.public_key_path
   security_group_id = module.vpcModule.security_group_id
-  subnet_id = module.vpcModule.public_subnet_ids[0]
+  subnet_id = module.vpcModule.public_subnet_ids[2]
   
 }
 
-module "backupModule" {
-  source = "./modules/backupModule"
-  target_backup_arn = module.pipelineModule.Jenkins_instance_arn
+# module "backupModule" {
+#   source = "./modules/backupModule"
+#   target_backup_arn = module.pipelineModule.Jenkins_instance_arn
   
-}
+# }
 
-resource random_id "bucket_suffix" {
-  byte_length = 2
-}
+# resource random_id "bucket_suffix" {
+#   byte_length = 2
+# }
 
-module "s3Module" {
-  source = "./modules/s3Module"
+# module "s3Module" {
+#   source = "./modules/s3Module"
 
-  bucket_name        = "application-registry-${random_id.bucket_suffix.hex}"
-  enable_elb_logging = true
-  force_destroy      = true
-  tags = {
-    Environment = "prod"
-    LogsType    = "elb"
-  }
-}
+#   bucket_name        = "application-registry-${random_id.bucket_suffix.hex}"
+#   enable_elb_logging = true
+#   force_destroy      = true
+#   tags = {
+#     Environment = "prod"
+#     LogsType    = "elb"
+#   }
+# }
