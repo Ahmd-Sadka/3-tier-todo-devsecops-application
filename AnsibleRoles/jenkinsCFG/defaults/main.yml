@@ -23,6 +23,7 @@ jenkins_plugins:
   - docker-workflow
   - multibranch-scan-webhook-trigger
   - multibranch-build-strategy-extension
+  - sonarqube-scanner
 
 # Credentials (placeholders—secure these later!)
 github_credentials:

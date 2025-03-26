@@ -4,14 +4,21 @@ metadata:
   name: quality
   namespace: argocd
 spec:
-  project: todo-app
+  project: default
   source:
-    path: quality
-    repoURL: https://github.com/argoproj/argo-cd.git
+    repoURL: https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application.git
+    targetRevision: main
+    path: Charts/sonarqube
+    helm:
+      valueFiles:
+        - quality-values.yaml
   destination:
     namespace: quality
     server: https://kubernetes.default.svc
-  project: default
-  source:
-    path: quality
-    repoURL: https://github.com/argoproj/argo-cd.git
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    

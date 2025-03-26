@@ -2,11 +2,14 @@ pipeline
 {
     agent any
     
-    stages 
-    {
-        stage('Build') 
-        {
-            steps 
-            {
+    stages {
+            stage('Checkout') {
+            steps {
+                git 'https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application.git'
+            }
+        }
+    }
     
-}}}
+    
+    
+}
