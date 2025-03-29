@@ -11,7 +11,9 @@ ingress:
   enabled: true  # Enable ingress
   # Used to create an Ingress record.
   hosts:
-     pathType: Prefix  # Path type for the ingress
+    - name: ""
+      path: /quality
+      pathType: Prefix  # Path type for the ingress
 
   annotations:
    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'  # ALB listen ports configuration
@@ -23,3 +25,15 @@ ingress:
   
 service:
   type: NodePort  # Service type node port because we are using ALB
+
+sonarWebContext: /quality/ # SonarQube web context
+
+
+# readinessProbe:
+#   sonarWebContext: /quality/  # SonarQube web context
+
+# # livenessProbe:
+# #   sonarWebContext: /quality  # SonarQube web context
+
+# # startupProbe:
+# #   sonarWebContext: /quality  # SonarQube web context

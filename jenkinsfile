@@ -5,9 +5,12 @@ pipeline
     stages {
             stage('Checkout') {
             steps {
-                git 'https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application.git'
+                git branch: 'main', url: 'https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application.git'
             }
         }
+        
+            stage('code quality') {
+                
     }
     
     

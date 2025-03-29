@@ -30,6 +30,7 @@ resource "helm_release" "elb_controller" {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = module.eksModule.aws_load_balancer_controller_role_arn
     }
+    
   }
 
 
@@ -54,7 +55,7 @@ resource "helm_release" "ebs_csi_driver" {
 #     create_namespace = true
 
 #     values = [
-#         file("../Charts/argo-cd/myValues.yaml")
+#         file("../Charts/argo-cd/argocd-values.yml")
 #     ]
   
 # }

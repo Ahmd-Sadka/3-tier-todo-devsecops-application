@@ -1,0 +1,73 @@
+grafana:
+  adminUser: admin
+  adminPassword: admin
+  service:
+    type: ClusterIP  
+  env:
+    GF_SERVER_ROOT_URL: "http://your-domain.com/grafana/"
+    GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+  ingress:
+    enabled: true
+    ingressClassName: alb
+    path: "/grafana/"
+    pathType: Prefix
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+      alb.ingress.kubernetes.io/group.name: "shared-group"
+
+alertmanager:
+  service:
+    type: ClusterIP
+  alertmanagerSpec:
+    externalUrl: "http://your-domain.com/alertmanager/"  # Matches ingress path
+    routePrefix: "/alertmanager/"
+  config:
+    global:
+      resolveTimeout: 5m
+    route:
+      receiver: 'slack'
+      group_by: ['alertname', 'cluster', 'service']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+      routes:
+        - match:
+            alertname: Watchdog
+          receiver: 'null'
+    receivers:
+      - name: 'null'
+      - name: 'slack'
+        slack_configs:
+          - api_url: 'https://hooks.slack.com/services/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'  # Replace with actual URL
+            channel: '#alerts'
+            send_resolved: true
+            title: '{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }} {{ .CommonLabels.alertname }}'
+            text: '{{ range .Alerts }}{{ .Annotations.description }}\n{{ end }}'
+  ingress:
+    enabled: true
+    ingressClassName: alb
+    paths:
+      - path: /alertmanager/
+        pathType: Prefix
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+      alb.ingress.kubernetes.io/group.name: "shared-group"
+
+prometheus:
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    ingressClassName: alb
+    paths:
+      - path: /prometheus/
+        pathType: Prefix
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+      alb.ingress.kubernetes.io/group.name: "shared-group"
+  prometheusSpec:
+    externalUrl: "http://your-domain.com/prometheus/"
+    routePrefix: "/prometheus/"

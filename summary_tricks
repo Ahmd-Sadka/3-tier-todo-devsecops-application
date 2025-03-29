@@ -82,3 +82,7 @@ eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=zephyr-eks
 
 afetr that we need to Create a Trust Policy for the EBS CSI Driver
  writes a simple rule saying that only the Kubernetes service account named ebs-csi-controller-sa (in the kube-system namespace) can use a special AWS role.
+
+ -----------------------------------
+
+ kubectl patch ds prometheus-prometheus-node-exporter --type "json" -p '[{"op": "remove", "path" : "/spec/template/spec/containers/0/volumeMounts/2/mountPropagation"}]'

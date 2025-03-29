@@ -9,8 +9,8 @@
 #     - role: cloudwatchAgent
 #       tags: [cloudagent, monitoring]
 
-#     - role: nodeExp
-#       tags: [node_exporter, monitoring]
+#     # - role: nodeExp
+#     #   tags: [node_exporter, monitoring]
 
 - name: setup_jenkins_and_docker
   hosts: Jenkins_EC2
