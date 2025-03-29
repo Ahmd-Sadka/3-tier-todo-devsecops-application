@@ -2,14 +2,14 @@ grafana:
   adminUser: admin
   adminPassword: admin
   service:
-    type: ClusterIP  
+    type: NodePort  
   env:
-    GF_SERVER_ROOT_URL: "http://your-domain.com/grafana/"
+    GF_SERVER_ROOT_URL: "http://k8s-sharedgroup-31b89e88b4-1896427576.us-east-1.elb.amazonaws.com/grafana"
     GF_SERVER_SERVE_FROM_SUB_PATH: "true"
   ingress:
     enabled: true
     ingressClassName: alb
-    path: "/grafana/"
+    path: "/grafana"
     pathType: Prefix
     annotations:
       alb.ingress.kubernetes.io/scheme: internet-facing
@@ -17,14 +17,15 @@ grafana:
       alb.ingress.kubernetes.io/group.name: "shared-group"
 
 alertmanager:
+  enabled: true
   service:
-    type: ClusterIP
+    type: NodePort
   alertmanagerSpec:
-    externalUrl: "http://your-domain.com/alertmanager/"  # Matches ingress path
-    routePrefix: "/alertmanager/"
+    externalUrl: "http://k8s-sharedgroup-31b89e88b4-1896427576.us-east-1.elb.amazonaws.com/alertmanager"  # Matches ingress path
+    routePrefix: "/alertmanager"
   config:
     global:
-      resolveTimeout: 5m
+      resolve_timeout: 5m
     route:
       receiver: 'slack'
       group_by: ['alertname', 'cluster', 'service']
@@ -48,26 +49,32 @@ alertmanager:
     enabled: true
     ingressClassName: alb
     paths:
-      - path: /alertmanager/
-        pathType: Prefix
+      - /alertmanager
+
+    pathType: Prefix
+    
     annotations:
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
       alb.ingress.kubernetes.io/group.name: "shared-group"
 
 prometheus:
+
   service:
-    type: ClusterIP
+    type: NodePort
+
   ingress:
     enabled: true
     ingressClassName: alb
     paths:
-      - path: /prometheus/
-        pathType: Prefix
+      - /prometheus
+
+    pathType: Prefix
+     
     annotations:
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
       alb.ingress.kubernetes.io/group.name: "shared-group"
   prometheusSpec:
-    externalUrl: "http://your-domain.com/prometheus/"
-    routePrefix: "/prometheus/"
+    externalUrl: "http://k8s-sharedgroup-31b89e88b4-1896427576.us-east-1.elb.amazonaws.com/prometheus"
+    routePrefix: "/prometheus"

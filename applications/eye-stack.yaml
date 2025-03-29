@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: show-time
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application.git
+    targetRevision: main
+    path: Charts/kube-prometheus-stack
+    helm:
+      valueFiles:
+        - monitoring.yaml
+  destination:
+    namespace: eye
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    

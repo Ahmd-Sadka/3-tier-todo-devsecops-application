@@ -32,8 +32,8 @@ sonarWebContext: /quality/ # SonarQube web context
 # readinessProbe:
 #   sonarWebContext: /quality/  # SonarQube web context
 
-# # livenessProbe:
-# #   sonarWebContext: /quality  # SonarQube web context
+# livenessProbe:
+#   sonarWebContext: /quality  # SonarQube web context
 
-# # startupProbe:
-# #   sonarWebContext: /quality  # SonarQube web context
+# startupProbe:
+#   sonarWebContext: /quality  # SonarQube web context

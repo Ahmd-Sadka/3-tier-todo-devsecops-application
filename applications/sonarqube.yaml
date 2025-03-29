@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: quality
+  name: sonarqube
   namespace: argocd
 spec:
   project: default
@@ -13,7 +13,7 @@ spec:
       valueFiles:
         - quality-values.yaml
   destination:
-    namespace: quality
+    namespace: sonarqube
     server: https://kubernetes.default.svc
   syncPolicy:
     automated:
