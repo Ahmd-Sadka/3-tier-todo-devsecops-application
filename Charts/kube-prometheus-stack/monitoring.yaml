@@ -4,7 +4,7 @@ grafana:
   service:
     type: NodePort  
   env:
-    GF_SERVER_ROOT_URL: "http://k8s-sharedgroup-31b89e88b4-1896427576.us-east-1.elb.amazonaws.com/grafana"
+    GF_SERVER_ROOT_URL: "http://k8s-sharedgroup-31b89e88b4-97154358.us-east-1.elb.amazonaws.com/grafana"
     GF_SERVER_SERVE_FROM_SUB_PATH: "true"
   ingress:
     enabled: true
@@ -22,7 +22,7 @@ alertmanager:
   service:
     type: NodePort
   alertmanagerSpec:
-    externalUrl: "http://k8s-sharedgroup-31b89e88b4-1896427576.us-east-1.elb.amazonaws.com/alertmanager"  # Matches ingress path
+    externalUrl: "http://k8s-sharedgroup-31b89e88b4-97154358.us-east-1.elb.amazonaws.com/alertmanager"  # Matches ingress path
     routePrefix: "/alertmanager"
   config:
     global:
@@ -79,5 +79,5 @@ prometheus:
       alb.ingress.kubernetes.io/group.name: "shared-group"
       alb.ingress.kubernetes.io/group.priority: "5"
   prometheusSpec:
-    externalUrl: "http://k8s-sharedgroup-31b89e88b4-1896427576.us-east-1.elb.amazonaws.com/prometheus"
+    externalUrl: "http://k8s-sharedgroup-31b89e88b4-97154358.us-east-1.elb.amazonaws.com/prometheus"
     routePrefix: "/prometheus"
