@@ -11,6 +11,8 @@ server:
     ingressClassName: alb  # Specifies the ALB Ingress controller
     annotations:
       alb.ingress.kubernetes.io/group.name: shared-group  # Groups with other Ingresses, adjust as needed
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/group.priority: "1" 
       alb.ingress.kubernetes.io/healthcheck-path: /argocd/healthz  # Health check path
       alb.ingress.kubernetes.io/healthcheck-protocol: HTTP         # Ensures HTTP is used
     

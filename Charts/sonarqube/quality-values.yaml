@@ -16,10 +16,12 @@ ingress:
       pathType: Prefix  # Path type for the ingress
 
   annotations:
-   alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'  # ALB listen ports configuration
-   alb.ingress.kubernetes.io/scheme: internet-facing  # Expose ALB to the public internet
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'  # ALB listen ports configuration
+    alb.ingress.kubernetes.io/scheme: internet-facing  # Expose ALB to the public internet
   
-   alb.ingress.kubernetes.io/group.name: shared-group  # ALB group name
+    alb.ingress.kubernetes.io/group.name: shared-group  # ALB group name
+    alb.ingress.kubernetes.io/group.priority: "2" 
+
   
   ingressClassName: alb  # Ingress class name
   

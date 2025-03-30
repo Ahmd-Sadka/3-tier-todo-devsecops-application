@@ -9,6 +9,8 @@ metadata:
     alb.ingress.kubernetes.io/target-type: instance
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
     alb.ingress.kubernetes.io/group.name: shared-group
+    alb.ingress.kubernetes.io/group.priority: "7" 
+
 spec:
   ingressClassName: alb
   rules:
