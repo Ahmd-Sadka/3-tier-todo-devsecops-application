@@ -86,3 +86,9 @@ afetr that we need to Create a Trust Policy for the EBS CSI Driver
  -----------------------------------
 
  kubectl patch ds prometheus-prometheus-node-exporter --type "json" -p '[{"op": "remove", "path" : "/spec/template/spec/containers/0/volumeMounts/2/mountPropagation"}]'
+
+kubectl --namespace eye get secrets show-time-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+admin
+
+kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
+
