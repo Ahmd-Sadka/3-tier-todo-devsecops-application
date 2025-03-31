@@ -1,5 +1,8 @@
-#!/bin/bash
+#!/usr/bin/bash
 
-kubectl create namespace argocd
-helm repo add argo https://argoproj.github.io/argo-helm
-helm install argocd argo/argo-cd -n argocd
+aws eks update-kubeconfig --region us-east-1 --name zephyr-eks
+helm install argocd Charts/argo-cd -f Charts/argo-cd/argocd-values.yml -n argocd --create-namespace
+
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+

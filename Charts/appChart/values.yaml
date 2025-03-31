@@ -29,7 +29,7 @@ frontend:
   port: 3000
   env:
     - name: REACT_APP_API_URL
-      value: "http://k8s-sharedgroup-31b89e88b4-97154358.us-east-1.elb.amazonaws.com/api"
+      value: "http://k8s-sharedgroup-31b89e88b4-1817630104.us-east-1.elb.amazonaws.com/api"
   resources:
     requests:
       memory: "64Mi"
