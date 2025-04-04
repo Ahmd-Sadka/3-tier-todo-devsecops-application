@@ -16,9 +16,7 @@ pipeline {
     GITHUB_REPO = "3-tier-todo-devsecops-application" // Adjust to your repo
 
     // SonarQube Configuration
-    SONARQUBE_SERVER = "sonarqube" // Name configured in Jenkins
-    SONAR_HOST_URL = "http://k8s-sharedgroup-31b89e88b4-230287661.us-east-1.elb.amazonaws.com/quality" // Adjust to your SonarQube URL
-    SONAR_TOKEN = credentials('sonarqube')
+    SCANNER_HOME = tool 'sonarqube-scanner' // Adjust to your SonarQube scanner installation name
 
     // Trivy Configuration
     TRIVY_IMAGE = "aquasec/trivy:latest"
@@ -53,24 +51,18 @@ pipeline {
     }
 
     stage('sonarqube analysis') {
-      environment {
-        scannerHome = tool 'sonarqube';
-        }
       steps {
         echo "Running SonarQube analysis..."
-        withSonarQubeEnv("${SONARQUBE_SERVER}") {
+        sh 'echo ${SCANNER_HOME}'
+       
           sh """
-          ${scannerHome}/bin/sonar-scanner \
-          -Dsonar.projectKey=${GITHUB_REPO} \
-          -Dsonar.sources=./3tier-nodejs/frontend/src \
-          -Dsonar.tests=./3tier-nodejs/frontend/src \
-          -Dsonar.test.inclusions=**/*.test.js \
-          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-          -Dsonar.host.url=${SONAR_HOST_URL} \
-          -Dsonar.login=${SONAR_TOKEN}
+          ${SCANNER_HOME}/bin/sonar-scanner \
+          -Dsonar.projectKey=3-tier-devsecops-todo-app \
+          -Dsonar.sources=./3tier-nodejs/frontend/src/ \
+          -Dsonar.host.url=http://k8s-sharedgroup-31b89e88b4-230287661.us-east-1.elb.amazonaws.com/quality \
+          -Dsonar.token=sqp_a5837c74c179e7a6a1a254cd88962809d8f056e1
           """
 
-        }
     
 
       }
