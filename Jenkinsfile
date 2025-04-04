@@ -66,7 +66,8 @@ pipeline {
           -Dsonar.tests=./3tier-nodejs/frontend/src \
           -Dsonar.test.inclusions=**/*.test.js \
           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-          -Dsonar.host.url=${SONAR_HOST_URL}
+          -Dsonar.host.url=${SONAR_HOST_URL} \
+          -Dsonar.login=${SONAR_TOKEN}
           """
 
         }
