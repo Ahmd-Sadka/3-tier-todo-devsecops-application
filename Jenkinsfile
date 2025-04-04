@@ -18,7 +18,7 @@ pipeline {
     // SonarQube Configuration
     SONARQUBE_SERVER = "sonarqube" // Name configured in Jenkins
     SONAR_HOST_URL = "http://k8s-sharedgroup-31b89e88b4-1817630104.us-east-1.elb.amazonaws.com/quality" // Adjust to your SonarQube URL
-    SONAR_TOKEN = credentials('sonarqube-auth')
+    SONAR_TOKEN = credentials('sonarqube')
 
     // Trivy Configuration
     TRIVY_IMAGE = "aquasec/trivy:latest"
