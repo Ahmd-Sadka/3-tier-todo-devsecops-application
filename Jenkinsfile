@@ -143,7 +143,7 @@ pipeline {
       }
     }
 
-    stage('Create Pull Request') {
+    stage('Commit Changes') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'github', secretKeyVariable: 'GITHUB_CREDS_PSW', passwordVariable: 'GITHUB_CREDS_PSW', usernameVariable: 'GITHUB_CREDS_USR')]) {
         echo "Creating pull request for Helm chart update..."
@@ -169,6 +169,7 @@ pipeline {
           """
         }
       }
+      
     
      
         
