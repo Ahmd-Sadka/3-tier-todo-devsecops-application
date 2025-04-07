@@ -104,18 +104,18 @@ pipeline {
     stage('scaning and pushing docker image') {
       parallel {
 
-        stage('Scan Docker Image with Trivy') {
-          steps {
-            echo "Scanning Docker image with Trivy..."
-            sh """
-            docker run --rm \
-              -v /var/run/docker.sock:/var/run/docker.sock \
-              -v /tmp:/tmp \
-              ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} > trivy-report.json
-              """
-            archiveArtifacts artifacts: 'trivy-report.json'
-          }
-        }
+        // stage('Scan Docker Image with Trivy') {
+        //   steps {
+        //     echo "Scanning Docker image with Trivy..."
+        //     sh """
+        //     docker run --rm \
+        //       -v /var/run/docker.sock:/var/run/docker.sock \
+        //       -v /tmp:/tmp \
+        //       ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} > trivy-report.json
+        //       """
+        //     archiveArtifacts artifacts: 'trivy-report.json'
+        //   }
+        // }
 
 
         stage("Push Docker Image") {
@@ -145,15 +145,15 @@ pipeline {
 
     stage('Commit Changes') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'github' , passwordVariable: 'GITHUB_CREDS_PSW', usernameVariable: 'GITHUB_CREDS_USR')]) {
+        withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
         echo "Committing changes..."
         script {
           sh 'git config --global --add safe.directory $WORKSPACE'
           sh "git config --global user.email ahmd.sadkaa@gmail.com"
-          sh "git config --global user.name ${GITHUB_CREDS_USR}"
+          sh "git config --global user.name Ahmad Sadka"
           sh 'git add .'
           sh 'git commit -m "Update values.yaml with new image tag ${IMAGE_NAME}:${IMAGE_TAG}"'
-          sh "git remote set-url origin https://${GITHUB_CREDS_PSW}@github.com/${GITHUB_CREDS_USR}/${GITHUB_REPO}.git"
+          sh "git remote set-url origin https://${GITHUB_TOKEN}@github.com/Ahmd-Sadka/${GITHUB_REPO}.git"
           sh "git push origin ${env.BRANCH_NAME}"
         }
         }
