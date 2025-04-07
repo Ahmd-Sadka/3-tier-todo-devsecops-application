@@ -31,6 +31,26 @@ pipeline {
   }
 
   stages{
+
+    // stage('Notify Start') {
+    //   steps {
+    //     script {
+    //       slackSend(channel: "${env.SLACK_CHANNEL}", message: "Build started for branch ${env.BRANCH_NAME} in repo ${GITHUB_REPO}.")
+    //     }
+    //   }
+    // }
+
+    stage('Disable Webhook') {
+    steps {
+        script {
+            sh '''
+            curl -X PATCH -H "Authorization: token $GITHUB_CREDS_PSW" \
+            https://api.github.com/repos/$GITHUB_CREDS_USR/$GITHUB_REPO/hooks/538212686 \
+            -d '{"active": false}'
+            '''
+        }
+    }
+}
       stage('Checkout') {
       steps {
         echo "Checking out branch ${env.BRANCH_NAME} from GitHub..."
@@ -38,6 +58,8 @@ pipeline {
         git url: "https://github.com/Ahmd-Sadka/${GITHUB_REPO}.git", branch: "${env.BRANCH_NAME}", credentialsId: 'github'
       }
   }
+
+
 
   // stage('Build & Test') {
   //     steps {
@@ -125,9 +147,11 @@ pipeline {
       steps {
         echo "Creating pull request for Helm chart update..."
         script {
+          sh 'git config --global --add safe.directory $WORKSPACE'
           sh 'git add Charts/appChart/values.yaml'
           sh 'git commit -m "Update values.yaml with new image tag ${IMAGE_NAME}:${IMAGE_TAG}"'
           sh 'git push origin ${env.BRANCH_NAME}'
+
 
           sh """
           curl -X POST -H "Authorization: token ${GITHUB_CREDS}" \
