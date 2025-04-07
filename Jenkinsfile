@@ -79,6 +79,7 @@ pipeline {
       }
     }
     }
+    stage ('parallal scan and push') {
     parallel {
 
     stage('Scan Docker Image with Trivy') {
@@ -106,6 +107,7 @@ pipeline {
     }
     }
     
+    }
     }
 
     stage('Update Charts/appChart/values.yaml') {
