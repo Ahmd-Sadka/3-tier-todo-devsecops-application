@@ -145,15 +145,15 @@ pipeline {
 
     stage('Commit Changes') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'github', secretKeyVariable: 'GITHUB_CREDS_PSW', passwordVariable: 'GITHUB_CREDS_PSW', usernameVariable: 'GITHUB_CREDS_USR')]) {
-        echo "Creating pull request for Helm chart update..."
+        withCredentials([usernamePassword(credentialsId: 'github' , gitToolName: 'Default')]) {
+        echo "Committing changes..."
         script {
           sh 'git config --global --add safe.directory $WORKSPACE'
           sh "git config --global user.email ahmd.sadkaa@gmail.com"
           sh "git config --global user.name ${GITHUB_CREDS_USR}"
           sh 'git add .'
           sh 'git commit -m "Update values.yaml with new image tag ${IMAGE_NAME}:${IMAGE_TAG}"'
-          sh "git remote set-url origin https://${GITHUB_CREDS_USR}:${GITHUB_CREDS_PSW}@github.com/${GITHUB_CREDS_USR}/${GITHUB_REPO}.git"
+          //sh "git remote set-url origin https://${GITHUB_CREDS_USR}:${GITHUB_CREDS_PSW}@github.com/${GITHUB_CREDS_USR}/${GITHUB_REPO}.git"
           sh "git push origin ${env.BRANCH_NAME}"
         }
         }
