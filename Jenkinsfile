@@ -150,7 +150,7 @@ pipeline {
           sh 'git config --global --add safe.directory $WORKSPACE'
           sh 'git add .'
           sh 'git commit -m "Update values.yaml with new image tag ${IMAGE_NAME}:${IMAGE_TAG}"'
-          sh 'git push origin ${env.BRANCH_NAME}'
+          sh "git push origin ${env.BRANCH_NAME}"
 
 
           sh """
