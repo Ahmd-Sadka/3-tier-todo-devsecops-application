@@ -59,6 +59,7 @@ pipeline {
           ${SCANNER_HOME}/bin/sonar-scanner \
           -Dsonar.projectKey=3-tier-devsecops-todo-app \
           -Dsonar.sources=./3tier-nodejs/frontend/src \
+          -Dsonar.javascript.lcov.reportPaths=./3tier-nodejs/frontend/coverage/lcov.info \
           -Dsonar.host.url=http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/quality \
           -Dsonar.token=sqp_732964ffc5f7b798a441e5b4c202497edc4b6612
           """
@@ -68,12 +69,12 @@ pipeline {
       }
     }
 
-    // stage('Build Docker Image') {
-    //   steps {
-    //     echo "Building Docker image..."
-    //     sh "docker build -t ${IMAGE_NAME} ."
-    //   }
-    // }
+    stage('Build Docker Image') {
+      steps {
+        echo "Building Docker image..."
+        sh "docker build -t ${IMAGE_NAME} ."
+      }
+    }
 
         
         
