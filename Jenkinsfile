@@ -153,6 +153,7 @@ pipeline {
           sh "git config --global user.name ${GITHUB_CREDS_USR}"
           sh 'git add .'
           sh 'git commit -m "Update values.yaml with new image tag ${IMAGE_NAME}:${IMAGE_TAG}"'
+          sh "git remote set-url origin https://${GITHUB_CREDS_USR}:${GITHUB_CREDS_PSW}@github.com/${GITHUB_CREDS_USR}/${GITHUB_REPO}.git"
           sh "git push origin ${env.BRANCH_NAME}"
         }
         }
