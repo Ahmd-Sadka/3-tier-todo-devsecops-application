@@ -16,7 +16,7 @@ pipeline {
     GITHUB_REPO = "3-tier-todo-devsecops-application" // Adjust to your repo
 
     // SonarQube Configuration
-    SCANNER_HOME = tool 'sonarqube-scanner' // Adjust to your SonarQube scanner installation name
+    SCANNER_HOME = tool 'sonarqube-6.2' // Adjust to your SonarQube scanner installation name
 
     // Trivy Configuration
     TRIVY_IMAGE = "aquasec/trivy:latest"
@@ -58,9 +58,9 @@ pipeline {
           sh """
           ${SCANNER_HOME}/bin/sonar-scanner \
           -Dsonar.projectKey=3-tier-devsecops-todo-app \
-          -Dsonar.sources=./3tier-nodejs/frontend/src/ \
-          -Dsonar.host.url=http://k8s-sharedgroup-31b89e88b4-230287661.us-east-1.elb.amazonaws.com/quality \
-          -Dsonar.token=sqp_a5837c74c179e7a6a1a254cd88962809d8f056e1
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/quality \
+          -Dsonar.token=sqp_732964ffc5f7b798a441e5b4c202497edc4b6612
           """
 
     
