@@ -79,7 +79,7 @@ pipeline {
       }
     }
     }
-    stage(scaning and pushing docker image ){
+    stage('scaning and pushing docker image') {
       parallel {
 
         stage('Scan Docker Image with Trivy') {
