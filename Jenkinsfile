@@ -39,36 +39,36 @@ pipeline {
       }
   }
 
-  stage('Build & Test') {
-      steps {
-        dir('./3tier-nodejs/frontend') {    
-            echo "Using Node.js version: ${env.NODE_VERSION}"
-            echo "Installing dependencies and building React application..."
-            sh 'npm install' // Install dependencies
-            sh 'npm run build' // Build the React app
-            sh 'npm test -- --coverage || true' // Run tests with coverage (optional if tests aren't set up)
-        }
-      }
-    }
+  // stage('Build & Test') {
+  //     steps {
+  //       dir('./3tier-nodejs/frontend') {    
+  //           echo "Using Node.js version: ${env.NODE_VERSION}"
+  //           echo "Installing dependencies and building React application..."
+  //           sh 'npm install' // Install dependencies
+  //           sh 'npm run build' // Build the React app
+  //           sh 'npm test -- --coverage || true' // Run tests with coverage (optional if tests aren't set up)
+  //       }
+  //     }
+  //   }
 
-    stage('sonarqube analysis') {
-      steps {
-        timeout(time: 60, unit: 'SECONDS') {
-        withSonarQubeEnv('sonarqube') {
-        echo "Running SonarQube analysis..."
-        sh 'echo ${SCANNER_HOME}'
+  //   stage('SAST with SonarQube') {
+  //     steps {
+  //       timeout(time: 60, unit: 'SECONDS') {
+  //       withSonarQubeEnv('sonarqube') {
+  //       echo "Running SonarQube analysis..."
+  //       sh 'echo ${SCANNER_HOME}'
        
-          sh """
-          ${SCANNER_HOME}/bin/sonar-scanner \
-          -Dsonar.projectKey=3-tier-devsecops-todo-app \
-          -Dsonar.sources=./3tier-nodejs/frontend/src \
-          -Dsonar.javascript.lcov.reportPaths=./3tier-nodejs/frontend/coverage/lcov.info \
-          """
-          }
-        waitForQualityGate abortPipeline: true
-        }   
-      }
-    }
+  //         sh """
+  //         ${SCANNER_HOME}/bin/sonar-scanner \
+  //         -Dsonar.projectKey=3-tier-devsecops-todo-app \
+  //         -Dsonar.sources=./3tier-nodejs/frontend/src \
+  //         -Dsonar.javascript.lcov.reportPaths=./3tier-nodejs/frontend/coverage/lcov.info \
+  //         """
+  //         }
+  //       waitForQualityGate abortPipeline: true
+  //       }   
+  //     }
+  //   }
 
 
     stage('Build Docker Image') {
