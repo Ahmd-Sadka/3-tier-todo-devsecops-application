@@ -1,22 +1,23 @@
 ---
-- name: "Set Up the Jenkins Repository"
-  ansible.builtin.template:
-    src: jenkins.repo.j2
-    dest: /etc/yum.repos.d/jenkins.repo
-    mode: '0644'
-  become: yes
-
 - name: "Add the Jenkins GPG Key"
-  ansible.builtin.rpm_key:
+  ansible.builtin.apt_key:
     state: present
-    key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+  become: yes
+  #when: ansible_os_family == 'Debian'
+
+
+- name: "Set Up the Jenkins Repository"
+  apt_repository:
+    repo: 'deb https://pkg.jenkins.io/debian-stable binary/'
+    state: present
   become: yes
 
-- name: Update yum Cache
-  ansible.builtin.yum:
+- name: Update apt Cache
+  ansible.builtin.apt:
     update_cache: yes
   become: yes
-  #when: ansible_os_family == 'RedHat'
+  #when: ansible_os_family == 'Debian'
 
 - name: "Install Java"
   ansible.builtin.package:
@@ -25,13 +26,13 @@
   become: yes
 
 - name: "Install Git"
-  ansible.builtin.yum:
+  ansible.builtin.package:
     name: "git"
     state: present
   become: yes
 
 - name: "Install Jenkins"
-  ansible.builtin.yum:
+  ansible.builtin.package:
     name: "{{ jenkins_packages }}"
     state: present
   become: yes

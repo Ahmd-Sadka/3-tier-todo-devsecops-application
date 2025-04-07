@@ -1,6 +1,6 @@
 ---
 
-java_packages: "java-17-amazon-corretto"
+java_packages: "openjdk-17-jre"
 
 
 jenkins_packages: "jenkins"
@@ -23,7 +23,7 @@ jenkins_plugins:
   - docker-workflow
   - multibranch-scan-webhook-trigger
   - multibranch-build-strategy-extension
-  - SonarQube-scanner
+  - SonarQube-Scanner
 
 # Credentials (placeholders—secure these later!)
 github_credentials:
