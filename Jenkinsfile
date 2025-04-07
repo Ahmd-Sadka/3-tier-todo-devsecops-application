@@ -98,7 +98,7 @@ pipeline {
 
         stage("Push Docker Image") {
           steps {
-            withCredentials([usernamePassword(credentialsId: ${DOCKER_CREDENTIALS}, passwordVariable: 'DOCKER_CREDENTIALS_PSW', usernameVariable: 'DOCKER_CREDENTIALS_USR')]) {
+            withCredentials([usernamePassword(credentialsId: 'docker', secretKeyVariable: 'DOCKER_CREDENTIALS_PSW', passwordVariable: 'DOCKER_CREDENTIALS_PSW', usernameVariable: 'DOCKER_CREDENTIALS_USR')]) {
             echo "Pushing Docker image to ECR or dockerhub..."
           //sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${DOCKER_REGISTRY}"
             sh "docker login -u ${DOCKER_CREDENTIALS_USR} -p ${DOCKER_CREDENTIALS_PSW} ${DOCKER_REGISTRY}"
