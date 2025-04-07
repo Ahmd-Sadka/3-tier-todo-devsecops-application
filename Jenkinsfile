@@ -149,6 +149,8 @@ pipeline {
         echo "Creating pull request for Helm chart update..."
         script {
           sh 'git config --global --add safe.directory $WORKSPACE'
+          sh "git config --global user.email ahmd.sadkaa@gmail.com"
+          sh "git config --global user.name ${GITHUB_CREDS_USR}"
           sh 'git add .'
           sh 'git commit -m "Update values.yaml with new image tag ${IMAGE_NAME}:${IMAGE_TAG}"'
           sh "git push origin ${env.BRANCH_NAME}"
