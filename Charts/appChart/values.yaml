@@ -21,8 +21,8 @@ frontend:
   image: a7md12/3-tier-todo-devsecops-application-frontend-tier:6
   port: 3000
   env:
-  - name: REACT_APP_API_URL
-    value: "http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/api"
+    - name: REACT_APP_API_URL
+      value: "http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/api"
   resources:
     requests:
       memory: 64Mi
