@@ -9,7 +9,7 @@ pipeline {
     // Docker & ECR Configuration
     DOCKER_REGISTRY = "a7md12" // e.g., public.ecr.aws/yourorg/your-app
     IMAGE_NAME = "${DOCKER_REGISTRY}/todo-web"
-    DOCKER_CREDENTIALS = credentials('dockerhub') // Store in Jenkins credentials
+    DOCKER_CREDENTIALS = credentials('docker') // Store in Jenkins credentials
 
     // GitHub Configuration
     GITHUB_CREDS = credentials('github') // Username/password for Git operations
