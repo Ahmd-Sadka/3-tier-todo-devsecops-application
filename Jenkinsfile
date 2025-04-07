@@ -8,7 +8,8 @@ pipeline {
     environment {
     // Docker & ECR Configuration
     DOCKER_REGISTRY = "a7md12" // e.g., public.ecr.aws/yourorg/your-app
-    IMAGE_NAME = "${DOCKER_REGISTRY}/todo-web"
+    IMAGE_NAME = "${DOCKER_REGISTRY}/3-tier-todo-devsecops-application-${env.BRANCH_NAME}" // Docker image name
+    IMAGE_TAG = "${env.BUILD_ID}" // Use Jenkins build ID as the image tag
     DOCKER_CREDENTIALS = credentials('docker') // Store in Jenkins credentials
 
     // GitHub Configuration
@@ -72,9 +73,35 @@ pipeline {
 
     stage('Build Docker Image') {
       steps {
+        dir(.'/3tier-nodejs/frontend') {
         echo "Building Docker image..."
-        sh "docker build -t ${IMAGE_NAME} ."
+        sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
       }
+    }
+    }
+
+    stage('Scan Docker Image with Trivy') {
+      steps {
+        echo "Scanning Docker image with Trivy..."
+        sh """
+        docker run --rm \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v /tmp:/tmp \
+          ${TRIVY_IMAGE} image --quiet --exit-code 1 --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}
+        """
+      }
+    }
+
+
+    stage("Push Docker Image") {
+      steps {
+        withCredentials([usernamePassword(credentialsId: ${DOCKER_CREDENTIALS}, passwordVariable: 'DOCKER_CREDENTIALS_PSW', usernameVariable: 'DOCKER_CREDENTIALS_USR')]) {
+        echo "Pushing Docker image to ECR or dockerhub..."
+      //sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${DOCKER_REGISTRY}"
+        sh "docker login -u ${DOCKER_CREDENTIALS_USR} -p ${DOCKER_CREDENTIALS_PSW} ${DOCKER_REGISTRY}"
+        sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+      }
+    }
     }
 
         
