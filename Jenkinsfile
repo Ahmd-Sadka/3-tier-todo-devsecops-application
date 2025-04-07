@@ -104,18 +104,18 @@ pipeline {
     stage('scaning and pushing docker image') {
       parallel {
 
-        // stage('Scan Docker Image with Trivy') {
-        //   steps {
-        //     echo "Scanning Docker image with Trivy..."
-        //     sh """
-        //     docker run --rm \
-        //       -v /var/run/docker.sock:/var/run/docker.sock \
-        //       -v /tmp:/tmp \
-        //       ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} > trivy-report.json
-        //       """
-        //     archiveArtifacts artifacts: 'trivy-report.json'
-        //   }
-        // }
+        stage('Scan Docker Image with Trivy') {
+          steps {
+            echo "Scanning Docker image with Trivy..."
+            sh """
+            docker run --rm \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v /tmp:/tmp \
+              ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} > trivy-report.json
+              """
+            archiveArtifacts artifacts: 'trivy-report.json'
+          }
+        }
 
 
         stage("Push Docker Image") {
@@ -145,13 +145,21 @@ pipeline {
 
     stage('Create Pull Request') {
       steps {
+        withCredentials([usernamePassword(credentialsId: 'github', secretKeyVariable: 'GITHUB_CREDS_PSW', passwordVariable: 'GITHUB_CREDS_PSW', usernameVariable: 'GITHUB_CREDS_USR')]) {
         echo "Creating pull request for Helm chart update..."
         script {
           sh 'git config --global --add safe.directory $WORKSPACE'
           sh 'git add .'
           sh 'git commit -m "Update values.yaml with new image tag ${IMAGE_NAME}:${IMAGE_TAG}"'
           sh "git push origin ${env.BRANCH_NAME}"
+        }
+        }
+      }
+    }
 
+    stage('Open Pull Request') {
+      steps {
+        echo "Opening pull request for Helm chart update..."
 
           sh """
           curl -X POST -H "Authorization: token ${GITHUB_CREDS}" \
@@ -161,7 +169,7 @@ pipeline {
           """
         }
       }
-    }
+    
      
         
 }
