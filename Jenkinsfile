@@ -73,7 +73,7 @@ pipeline {
 
     stage('Build Docker Image') {
       steps {
-        dir(.'/3tier-nodejs/frontend') {
+        dir('./3tier-nodejs/frontend') {
         echo "Building Docker image..."
         sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
       }
