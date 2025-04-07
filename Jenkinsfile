@@ -79,32 +79,36 @@ pipeline {
       }
     }
     }
-  
-    stage('Scan Docker Image with Trivy') {
-      steps {
-        echo "Scanning Docker image with Trivy..."
-        sh """
-        docker run --rm \
-          -v /var/run/docker.sock:/var/run/docker.sock \
-          -v /tmp:/tmp \
-          ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} > trivy-report.json
-        """
-        archiveArtifacts artifacts: 'trivy-report.json'
-      }
-    }
+    stage(scaning and pushing docker image ){
+      parallel {
+
+        stage('Scan Docker Image with Trivy') {
+          steps {
+            echo "Scanning Docker image with Trivy..."
+            sh """
+            docker run --rm \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v /tmp:/tmp \
+              ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} > trivy-report.json
+              """
+            archiveArtifacts artifacts: 'trivy-report.json'
+          }
+        }
 
 
-    stage("Push Docker Image") {
-      steps {
-        withCredentials([usernamePassword(credentialsId: ${DOCKER_CREDENTIALS}, passwordVariable: 'DOCKER_CREDENTIALS_PSW', usernameVariable: 'DOCKER_CREDENTIALS_USR')]) {
-        echo "Pushing Docker image to ECR or dockerhub..."
-      //sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${DOCKER_REGISTRY}"
-        sh "docker login -u ${DOCKER_CREDENTIALS_USR} -p ${DOCKER_CREDENTIALS_PSW} ${DOCKER_REGISTRY}"
-        sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+        stage("Push Docker Image") {
+          steps {
+            withCredentials([usernamePassword(credentialsId: '${DOCKER_CREDENTIALS}', passwordVariable: 'DOCKER_CREDENTIALS_PSW', usernameVariable: 'DOCKER_CREDENTIALS_USR')]) {
+            echo "Pushing Docker image to ECR or dockerhub..."
+          //sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${DOCKER_REGISTRY}"
+            sh "docker login -u ${DOCKER_CREDENTIALS_USR} -p ${DOCKER_CREDENTIALS_PSW} ${DOCKER_REGISTRY}"
+            sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+          }
+        }
+        }
       }
     }
-    }
-     
+    
 
     stage('Update Charts/appChart/values.yaml') {
       steps {
