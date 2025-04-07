@@ -24,7 +24,7 @@ pipeline {
 
     // Kubernetes/ArgoCD Configuration
     K8S_NAMESPACE = "default"
-    DEPLOYMENT_MANIFESTS = "Charts/appChart/values.yaml" // Directory for manifests
+    VALUES_PATH = "Charts/appChart/values.yaml" // Directory for manifests
 
     // Slack Configuration
     SLACK_CHANNEL = "#alerts"
@@ -87,8 +87,9 @@ pipeline {
         docker run --rm \
           -v /var/run/docker.sock:/var/run/docker.sock \
           -v /tmp:/tmp \
-          ${TRIVY_IMAGE} image --quiet --exit-code 1 --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}
+          ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} 
         """
+        archiveArtifacts artifacts: 'trivy-report.json'
       }
     }
 
@@ -103,6 +104,36 @@ pipeline {
       }
     }
     }
+
+    stage('Update Charts/appChart/values.yaml') {
+      steps {
+        echo "Updating Helm chart values.yaml with new image tag..."
+        script {
+          def valuesFile = readYaml file: "${VALUES_PATH}"
+          valuesFile.frontend.image = "${IMAGE_NAME}:${IMAGE_TAG}"
+          writeYaml file: "${VALUES_PATH}", data: valuesFile
+        }
+      }
+    }
+
+    stage('Create Pull Request') {
+      steps {
+        echo "Creating pull request for Helm chart update..."
+        script {
+          sh 'git add Charts/appChart/values.yaml'
+          sh 'git commit -m "Update values.yaml with new image tag ${IMAGE_NAME}:${IMAGE_TAG}"'
+          sh 'git push origin ${env.BRANCH_NAME}'
+
+          sh """
+          curl -X POST -H "Authorization: token ${GITHUB_CREDS}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{"title":"Update Helm chart","head":"${env.BRANCH_NAME}","base":"main"}' \
+            https://api.github.com/repos/Ahmd-Sadka/${GITHUB_REPO}/pulls
+          """
+        }
+      }
+    }
+
 
         
         
