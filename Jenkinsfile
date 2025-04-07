@@ -52,6 +52,8 @@ pipeline {
 
     stage('sonarqube analysis') {
       steps {
+        timeout(time: 60, unit: 'SECONDS') {
+        withSonarQubeEnv('sonarqube') {
         echo "Running SonarQube analysis..."
         sh 'echo ${SCANNER_HOME}'
        
@@ -60,14 +62,13 @@ pipeline {
           -Dsonar.projectKey=3-tier-devsecops-todo-app \
           -Dsonar.sources=./3tier-nodejs/frontend/src \
           -Dsonar.javascript.lcov.reportPaths=./3tier-nodejs/frontend/coverage/lcov.info \
-          -Dsonar.host.url=http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/quality \
-          -Dsonar.token=sqp_732964ffc5f7b798a441e5b4c202497edc4b6612
           """
-
-    
-
+          }
+        waitForQualityGate abortPipeline: true
+        }   
       }
     }
+
 
     stage('Build Docker Image') {
       steps {

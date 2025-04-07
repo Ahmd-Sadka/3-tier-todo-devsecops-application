@@ -6,13 +6,13 @@
   become: yes
 
 - name: Install Docker
-  ansible.builtin.package:
+  ansible.builtin.apt:
     name: docker
     state: present
   become: yes
 
 - name: Start and Enable Docker Service
-  ansible.builtin.systemd:
+  ansible.builtin.service:
     name: docker
     state: started
     enabled: yes
