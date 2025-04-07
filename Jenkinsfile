@@ -110,13 +110,13 @@ pipeline {
     }
     
 
-    stage('Update Charts/appChart/values.yaml') {
+    stage('Update Charts Values.yaml') {
       steps {
         echo "Updating Helm chart values.yaml with new image tag..."
         script {
           def valuesFile = readYaml file: "${VALUES_PATH}"
           valuesFile.frontend.image = "${IMAGE_NAME}:${IMAGE_TAG}"
-          writeYaml file: "${VALUES_PATH}", data: valuesFile
+          writeYaml file: "${VALUES_PATH}", data: valuesFile , overwrite: true
         }
       }
     }
