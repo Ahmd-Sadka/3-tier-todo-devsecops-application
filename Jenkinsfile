@@ -79,6 +79,7 @@ pipeline {
       }
     }
     }
+    parallel {
 
     stage('Scan Docker Image with Trivy') {
       steps {
@@ -87,7 +88,7 @@ pipeline {
         docker run --rm \
           -v /var/run/docker.sock:/var/run/docker.sock \
           -v /tmp:/tmp \
-          ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} 
+          ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} > trivy-report.json
         """
         archiveArtifacts artifacts: 'trivy-report.json'
       }
@@ -103,6 +104,8 @@ pipeline {
         sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
       }
     }
+    }
+    
     }
 
     stage('Update Charts/appChart/values.yaml') {
