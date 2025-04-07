@@ -13,7 +13,7 @@ pipeline {
     DOCKER_CREDENTIALS = credentials('docker') // Store in Jenkins credentials
 
     // GitHub Configuration
-    GITHUB_CREDS = credentials('github') // Username/password for Git operations
+    //GITHUB_CREDS = credentials('github') // Username/password for Git operations
     GITHUB_REPO = "3-tier-todo-devsecops-application" // Adjust to your repo
 
     // SonarQube Configuration
