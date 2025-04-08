@@ -163,7 +163,6 @@ pipeline {
         }
 
       }
-      
     }
 
     stage('Open Pull Request') {
