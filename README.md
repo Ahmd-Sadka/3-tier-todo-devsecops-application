@@ -5,6 +5,7 @@ Welcome to the **Zephyr DevOps Project**—a cloud-native infrastructure setup t
 
 This project is a complete, end-to-end CI/CD pipeline and infrastructure deployment using the best DevOps practices. It's built on top of **Amazon EKS**, with infrastructure managed through **Terraform**, **Ansible**, and **Helm**, and incorporates **GitOps** principles with **ArgoCD**, plus observability with **Prometheus**, **Grafana**, and **SonarQube**.
 
+![app](https://raw.githubusercontent.com/Ahmd-Sadka/3-tier-todo-devsecops-application/main/pnq/app.png)
 ---
 
 ## 🌟 Key Features
@@ -140,6 +141,8 @@ you can now access jenkins on http://<public_ip>:8080 and dont forget to read th
   - add tools you need
   - save the job
   - now you can start the pipeline and build the app.
+
+![jenkins pipeline](https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application/blob/main/png/jenkins.png?raw=true)
 
 ### 9. sonarqube
 
