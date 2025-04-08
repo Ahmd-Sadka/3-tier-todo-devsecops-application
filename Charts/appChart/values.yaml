@@ -18,7 +18,7 @@ backend:
     port: 3001
 frontend:
   replicas: 2
-  image: a7md12/3-tier-todo-devsecops-application-frontend-tier:47
+  image: a7md12/3-tier-todo-devsecops-application-frontend-tier:48
   port: 3000
   env:
   - name: REACT_APP_API_URL
