@@ -157,7 +157,7 @@ pipeline {
           sh "git push origin ${env.BRANCH_NAME}"
         }
         }
-        
+
       }
     }
 
@@ -166,7 +166,7 @@ pipeline {
         echo "Opening pull request for Helm chart update..."
 
           sh """
-          curl -X POST -H "Authorization: token ${GITHUB_CREDS}" \
+          curl -X POST -H "Authorization: token ${GITHUB_CREDS_PSW}" \
             -H "Accept: application/vnd.github.v3+json" \
             -d '{"title":"Update Helm chart","head":"${env.BRANCH_NAME}","base":"main"}' \
             https://api.github.com/repos/Ahmd-Sadka/${GITHUB_REPO}/pulls
