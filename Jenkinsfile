@@ -12,9 +12,12 @@ pipeline {
     IMAGE_TAG = "${env.BUILD_ID}" // Use Jenkins build ID as the image tag
     DOCKER_CREDENTIALS = credentials('docker') // Store in Jenkins credentials
 
+
     // GitHub Configuration
     //GITHUB_CREDS = credentials('github') // Username/password for Git operations
     GITHUB_REPO = "3-tier-todo-devsecops-application" // Adjust to your repo
+    GITHUB_CREDS = credentials('github') // GitHub username
+
 
     // SonarQube Configuration
     SCANNER_HOME = tool 'sonarqube-6.2' // Adjust to your SonarQube scanner installation name
@@ -44,7 +47,7 @@ pipeline {
     steps {
         script {
             sh '''
-            curl -X PATCH -H "Authorization: token $GITHUB_CREDS_PSW" \
+            curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" \
             https://api.github.com/repos/$GITHUB_CREDS_USR/$GITHUB_REPO/hooks/538212686 \
             -d '{"active": false}'
             '''
@@ -132,7 +135,7 @@ pipeline {
     }
     
 
-    stage('Update Charts Values.yaml') {
+    stage('Update Chart Values.yaml') {
       steps {
         echo "Updating Helm chart values.yaml with new image tag..."
         script {
@@ -166,7 +169,7 @@ pipeline {
         echo "Opening pull request for Helm chart update..."
 
           sh """
-          curl -X POST -H "Authorization: token ${GITHUB_CREDS_PSW}" \
+          curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
             -H "Accept: application/vnd.github.v3+json" \
             -d '{"title":"Update Helm chart","head":"${env.BRANCH_NAME}","base":"main"}' \
             https://api.github.com/repos/Ahmd-Sadka/${GITHUB_REPO}/pulls
