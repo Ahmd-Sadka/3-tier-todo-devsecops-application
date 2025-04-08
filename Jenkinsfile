@@ -1,4 +1,4 @@
-pipeline {
+r()pipeline {
     agent any
 
     tools {
