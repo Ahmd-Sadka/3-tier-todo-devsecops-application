@@ -86,7 +86,7 @@ pipeline {
        
           sh """
           ${SCANNER_HOME}/bin/sonar-scanner \
-          -Dsonar.projectKey=3-tier-devsecops-todo-app \
+          -Dsonar.projectKey=3-tier-devsecops-todo-app-${env.BRANCH_NAME} \
           -Dsonar.sources=./3tier-nodejs/backend/ \
           -Dsonar.javascript.lcov.reportPaths=./3tier-nodejs/frontend/coverage/lcov.info \
           """
