@@ -1,4 +1,22 @@
- # use the following command to update the kubeconfig
+# 🚀 Secure & Scalable CI/CD on AWS EKS
+
+This project demonstrates a comprehensive DevOps pipeline for deploying a **three-tier To-Do application** on **AWS EKS**, using **Terraform**, **Ansible**, **Helm**, **GitOps**, and **CI/CD practices**.
+
+## 🧠 Project Summary
+
+### Key Features
+
+- **Scalability** with Kubernetes and Load Balancers
+- **Observability** using Prometheus and Grafana
+- **Security** via IAM Roles for Service Accounts (IRSA), encrypted secrets, and controlled access
+- **Resilience** using AWS Backup and dynamic provisioning
+- **Automation** with Jenkins pipelines and ArgoCD GitOps
+- **Code Quality** checks with SonarQube and Trivy
+- **Disaster Recovery** using AWS Backup and dynamic provisioning
+- **Helm** for Kubernetes package management
+
+---
+# use the following command to update the kubeconfig
 aws eks update-kubeconfig --region us-east-1 --name zephyr-eks
 
 ## to create a remote state file
@@ -10,7 +28,7 @@ aws eks update-kubeconfig --region us-east-1 --name zephyr-eks
     encrypt        = true
    dynamodb_table = "terraform-lock"
   }
-
+---------------------------------------------
 terraform graph | dot -Tpng > graph.png && open graph.png # create terraform graph
 ------------------------------------------------
 
@@ -22,16 +40,16 @@ terraform graph | dot -Tpng > graph.png && open graph.png # create terraform gra
 ## to avoid using hardcoded account number you can use data source aws_caller_identity.current.account_id
    or you can use resources arn of the resources you want to back up
 
-----------------------------------------------------------------
-## Ansible playbook 
 --------------------------------------
+## Ansible playbook 
+## 🧩 Ansible Playbook Strategy
+
+🔐 **Security Tip**: Credentials and secrets should not always be automated. Some manual steps ensure better control and auditing.
 
 # note: not every thing should be automated, some things should be done manually like creating credentials even if its encrypted
 # so that we can have a better control over the security of the system, so we can have a better control over the security of the system
-# may be in future we can automate this process as well but for now we will keep it manual
-# so we can have a better control over the security of the system
 
-#--------------------------------------
+--------------------------------------
 
 ##s3Module
 
@@ -45,10 +63,10 @@ or we can use
 lifecycle { prevent_destroy = true }
 
 # then we can apply the rest of the resources using the following command
-terraform apply 
+terraform apply --auto-approve
+
 --------------------------------------
 # helm releases
-## very important
 
 after creating eks and node groupwe should initialize again to make helm can interact with our cluster in order to perfoem helm commands to install the helm charts
 
@@ -84,11 +102,46 @@ afetr that we need to Create a Trust Policy for the EBS CSI Driver
  writes a simple rule saying that only the Kubernetes service account named ebs-csi-controller-sa (in the kube-system namespace) can use a special AWS role.
 
  -----------------------------------
+ - Patch Node Exporter mount issue: 
+node exporter has a an issue in a specific version use the following command to fix it if you face this issue
 
  kubectl patch ds prometheus-prometheus-node-exporter --type "json" -p '[{"op": "remove", "path" : "/spec/template/spec/containers/0/volumeMounts/2/mountPropagation"}]'
+-----------------------------------
 
 kubectl --namespace eye get secrets show-time-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 admin
 
 kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
 
+--------------------
+##Github token
+you need a github token have a permissions to write in your repo to be able to push the changes to your repo
+
+### 🔑 GitHub Personal Access Token
+Ensure it includes:
+- `repo`
+- `workflow`
+
+---
+-----------------------
+
+## sonarqube 
+in sonarqube dont forget to create a project or user token to be able to push the changes to sonarqube
+------------------------
+
+## 🌐 Ingress & Load Balancers
+
+Prioritize root path rules to avoid access issues:
+
+if you are using ingress controller to dynamically create the load balancer to expose the services you should pritorize the your ingress rules so that you can access the services from the outside world without facing issues especially when you should use root path 
+
+you can pritorize rules with priority from console or using specific annotation depend on the ingress controller you are using like nginx or aws-lb-controller
+------------------------
+
+## 🔄 GitOps & Webhooks: Avoid Infinite Loops
+
+1. Temporarily disable the webhook.
+2. Apply code changes via pipeline.
+3. Re-enable the webhook.
+
+if you will update the file throuh the pipeline and you are using webhooks to trigger the pipeline you need to disable the webhook at first and then update the file and then enable the webhook again to run from infinite loop of builds 

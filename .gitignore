@@ -11,3 +11,5 @@
 
 
 ./AnsibleRoles/secrets/
+
+./ahmd.pem
