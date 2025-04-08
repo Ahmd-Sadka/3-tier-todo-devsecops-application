@@ -5,8 +5,7 @@ Welcome to the **Zephyr DevOps Project**—a cloud-native infrastructure setup t
 
 This project is a complete, end-to-end CI/CD pipeline and infrastructure deployment using the best DevOps practices. It's built on top of **Amazon EKS**, with infrastructure managed through **Terraform**, **Ansible**, and **Helm**, and incorporates **GitOps** principles with **ArgoCD**, plus observability with **Prometheus**, **Grafana**, and **SonarQube**.
 
-![app](https://raw.githubusercontent.com/Ahmd-Sadka/3-tier-todo-devsecops-application/main/png/app.png)
----
+![app](https://raw.githubusercontent.com/Ahmd-Sadka/3-tier-todo-devsecops-application/main/png/app.png ?raw=true)
 
 ## 🌟 Key Features
 
@@ -18,6 +17,8 @@ This project is a complete, end-to-end CI/CD pipeline and infrastructure deploym
 - **Observability**: Prometheus + Grafana for monitoring. SonarQube for code quality.
 - **Secure Secrets Handling** with Kubernetes secrets and manual credential setup for maximum control.
 - **Best Practices Everywhere**: Prevent-destroy lifecycle rules, remote backend with locking, least privilege IAM roles, and more!
+
+![whole](https://raw.githubusercontent.com/Ahmd-Sadka/3-tier-todo-devsecops-application/main/png/whole-cluster.png ?raw=true)
 
 ---
 
