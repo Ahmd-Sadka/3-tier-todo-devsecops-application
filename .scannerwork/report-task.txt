@@ -2,5 +2,5 @@ projectKey=3-tier-devsecops-todo-app-frontend-tier
 serverUrl=http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/quality
 serverVersion=25.1.0.102122
 dashboardUrl=http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/quality/dashboard?id=3-tier-devsecops-todo-app-frontend-tier
-ceTaskId=91ed8715-cd30-4351-8cfd-39a94aab6222
-ceTaskUrl=http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/quality/api/ce/task?id=91ed8715-cd30-4351-8cfd-39a94aab6222
+ceTaskId=91a6bb91-45e9-4323-9faf-c209b0ba5776
+ceTaskUrl=http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/quality/api/ce/task?id=91a6bb91-45e9-4323-9faf-c209b0ba5776
