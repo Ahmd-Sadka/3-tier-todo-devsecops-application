@@ -1,3 +1,4 @@
+*.pem
 
 # Project SSH keys
 ./todos-infra/keys/
@@ -11,5 +12,3 @@
 
 
 ./AnsibleRoles/secrets/
-
-./ahmd.pem
