@@ -71,7 +71,7 @@ pipeline {
             echo "Using Node.js version: ${env.NODE_VERSION}"
             echo "Installing dependencies and building React application..."
             sh 'npm install' // Install dependencies
-            sh 'npm run build' // Build the React app
+            // sh 'npm run build' 
             sh 'npm test -- --coverage || true' // Run tests with coverage (optional if tests aren't set up)
         }
       }
