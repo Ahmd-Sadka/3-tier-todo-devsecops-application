@@ -1,0 +1,6 @@
+projectKey=3-tier-devsecops-todo-app
+serverUrl=http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/quality
+serverVersion=25.1.0.102122
+dashboardUrl=http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/quality/dashboard?id=3-tier-devsecops-todo-app
+ceTaskId=044abd84-2bd1-4706-aeec-15ce8bcc2376
+ceTaskUrl=http://k8s-sharedgroup-31b89e88b4-526087752.us-east-1.elb.amazonaws.com/quality/api/ce/task?id=044abd84-2bd1-4706-aeec-15ce8bcc2376
