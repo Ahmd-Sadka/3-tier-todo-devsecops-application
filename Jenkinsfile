@@ -36,13 +36,13 @@ pipeline {
 
   stages{
 
-    // stage('Notify Start') {
-    //   steps {
-    //     script {
-    //       slackSend(channel: "${env.SLACK_CHANNEL}", message: "Build started for branch ${env.BRANCH_NAME} in repo ${GITHUB_REPO}.")
-    //     }
-    //   }
-    // }
+    stage('Notify Start') {
+      steps {
+        script {
+          slackSend(channel: "${env.SLACK_CHANNEL}", message: "Build started for branch ${env.BRANCH_NAME} in repo ${GITHUB_REPO}.")
+        }
+      }
+    }
 
     stage('Disable Webhook') {
     steps {
@@ -65,36 +65,36 @@ pipeline {
 
 
 
-  // stage('Build & Test') {
-  //     steps {
-  //       dir('./3tier-nodejs/frontend') {    
-  //           echo "Using Node.js version: ${env.NODE_VERSION}"
-  //           echo "Installing dependencies and building React application..."
-  //           sh 'npm install' // Install dependencies
-  //           sh 'npm run build' // Build the React app
-  //           sh 'npm test -- --coverage || true' // Run tests with coverage (optional if tests aren't set up)
-  //       }
-  //     }
-  //   }
+  stage('Build & Test') {
+      steps {
+        dir('./3tier-nodejs/frontend') {    
+            echo "Using Node.js version: ${env.NODE_VERSION}"
+            echo "Installing dependencies and building React application..."
+            sh 'npm install' // Install dependencies
+            sh 'npm run build' // Build the React app
+            sh 'npm test -- --coverage || true' // Run tests with coverage (optional if tests aren't set up)
+        }
+      }
+    }
 
-  //   stage('SAST with SonarQube') {
-  //     steps {
-  //       timeout(time: 60, unit: 'SECONDS') {
-  //       withSonarQubeEnv('sonarqube') {
-  //       echo "Running SonarQube analysis..."
-  //       sh 'echo ${SCANNER_HOME}'
+    stage('SAST with SonarQube') {
+      steps {
+        timeout(time: 60, unit: 'SECONDS') {
+        withSonarQubeEnv('sonarqube') {
+        echo "Running SonarQube analysis..."
+        sh 'echo ${SCANNER_HOME}'
        
-  //         sh """
-  //         ${SCANNER_HOME}/bin/sonar-scanner \
-  //         -Dsonar.projectKey=3-tier-devsecops-todo-app \
-  //         -Dsonar.sources=./3tier-nodejs/frontend/src \
-  //         -Dsonar.javascript.lcov.reportPaths=./3tier-nodejs/frontend/coverage/lcov.info \
-  //         """
-  //         }
-  //       waitForQualityGate abortPipeline: true
-  //       }   
-  //     }
-  //   }
+          sh """
+          ${SCANNER_HOME}/bin/sonar-scanner \
+          -Dsonar.projectKey=3-tier-devsecops-todo-app \
+          -Dsonar.sources=./3tier-nodejs/frontend/src \
+          -Dsonar.javascript.lcov.reportPaths=./3tier-nodejs/frontend/coverage/lcov.info \
+          """
+          }
+        waitForQualityGate abortPipeline: true
+        }   
+      }
+    }
 
 
     stage('Build Docker Image') {
@@ -108,18 +108,18 @@ pipeline {
     stage('scaning and pushing docker image') {
       parallel {
 
-        // stage('Scan Docker Image with Trivy') {
-        //   steps {
-        //     echo "Scanning Docker image with Trivy..."
-        //     sh """
-        //     docker run --rm \
-        //       -v /var/run/docker.sock:/var/run/docker.sock \
-        //       -v /tmp:/tmp \
-        //       ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} > trivy-report.json
-        //       """
-        //     archiveArtifacts artifacts: 'trivy-report.json'
-        //   }
-        // }
+        stage('Scan Docker Image with Trivy') {
+          steps {
+            echo "Scanning Docker image with Trivy..."
+            sh """
+            docker run --rm \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v /tmp:/tmp \
+              ${TRIVY_IMAGE} image --quiet --exit-code 0 --severity HIGH,CRITICAL --format json --output trivy-report.json --ignore-unfixed ${IMAGE_NAME}:${IMAGE_TAG} > trivy-report.json
+              """
+            archiveArtifacts artifacts: 'trivy-report.json'
+          }
+        }
 
 
         stage("Push Docker Image") {
@@ -177,7 +177,24 @@ pipeline {
           """
         }
       }
-      
+    stage('Enable Webhook') {
+      steps {
+        script {
+          sh '''
+          curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" \
+          https://api.github.com/repos/$GITHUB_CREDS_USR/$GITHUB_REPO/hooks/538212686 \
+          -d '{"active": true}'
+          '''
+        }
+      }
+    }
+    stage('Notify End') {
+      steps {
+        script {
+          slackSend(channel: "${env.SLACK_CHANNEL}", message: "Build completed for branch ${env.BRANCH_NAME} in repo ${GITHUB_REPO}.")
+        }
+      }
+    }
     
      
         
