@@ -5,7 +5,7 @@ Welcome to the **Zephyr DevOps Project**—a cloud-native infrastructure setup t
 
 This project is a complete, end-to-end CI/CD pipeline and infrastructure deployment using the best DevOps practices. It's built on top of **Amazon EKS**, with infrastructure managed through **Terraform**, **Ansible**, and **Helm**, and incorporates **GitOps** principles with **ArgoCD**, plus observability with **Prometheus**, **Grafana**, and **SonarQube**.
 
-![app](https://raw.githubusercontent.com/Ahmd-Sadka/3-tier-todo-devsecops-application/main/pnq/app.png)
+![app](https://raw.githubusercontent.com/Ahmd-Sadka/3-tier-todo-devsecops-application/main/png/app.png)
 ---
 
 ## 🌟 Key Features
@@ -43,6 +43,10 @@ This project is a complete, end-to-end CI/CD pipeline and infrastructure deploym
 ---
 
 ## 📸 Architecture Overview
+
+![app](https://raw.githubusercontent.com/Ahmd-Sadka/3-tier-todo-devsecops-application/main/png/frontend_pipeline.png)
+![app](https://raw.githubusercontent.com/Ahmd-Sadka/3-tier-todo-devsecops-application/main/png/backend_pipeline.png)
+---
 
 - S3 Remote Backend configured via Terraform then state removed.
 - VPC & networking configured via Terraform.
@@ -153,15 +157,21 @@ you can now access jenkins on http://<public_ip>:8080 and dont forget to read th
   - add webhook trigger "http://<public_ip>:8080/sonarqube-webhook"
   - save the project
 
+![sonarqube](https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application/blob/main/png/SAST.png?raw=true)
+
 ### 10. ArgoCD
 
   - go to http://<load_balancer_url>/argocd to see the your apps
+
+![argocd](https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application/blob/main/png/argocd_apps.png?raw=true)
 
 ### 11. Observability
 
   - go to http://<load_balancer_url>/prometheus to see the metrics and targets
   - go to http://<load_balancer_url>/grafana to see the dashboards
   - go to http://<load_balancer_url>/alertmanager to see the alerts
+![grafana](https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application/blob/main/png/eye-2.png?raw=true)
+![observability](https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application/blob/main/png/eye-1.png?raw=true)
 
 ### 12. Notifications
   
@@ -169,6 +179,8 @@ you can now access jenkins on http://<public_ip>:8080 and dont forget to read th
   - create a slack app
   - add webhook trigger "http://<public_ip>:8080/slack-webhook"
   - go to slack to see the notifications and alerts
+
+![slack](https://github.com/Ahmd-Sadka/3-tier-todo-devsecops-application/blob/main/png/slack.png?raw=true)
 
 
 ## 
